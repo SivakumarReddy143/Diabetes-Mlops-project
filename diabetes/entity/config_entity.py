@@ -65,5 +65,26 @@ class DataValidationConfig:
         self.drift_report_file_path:str = os.path.join(self.drift_report_dir,
                                                        training_pipeline.DATA_VALIDATION_DRIFT_REPORT_FILE_NAME
                                                        )
+
+class DataTransformationConfig:
+    def __init__(self,training_pipeline_config:TrainingPipelineConfig):
+        self.data_transformation_dir=os.path.join(training_pipeline_config.artifacts_dir,
+                                                  training_pipeline.DATA_TRANSFORMATION_DIR
+                                                  )
+        self.data_transformed_dir=os.path.join(self.data_transformation_dir,
+                                               training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DIR
+                                               )
+        self.data_transformation_object_dir=os.path.join(self.data_transformation_dir,
+                                                         training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR
+                                                         )
+        self.train_numpy_array_file_path=os.path.join(self.data_transformed_dir,
+                                                      training_pipeline.DATA_TRANSFORMATION_TRAIN_FILE_PATH
+                                                      )
+        self.test_numpy_array_file_path=os.path.join(self.data_transformed_dir,
+                                                     training_pipeline.DATA_TRANSFORMATION__TEST_FILE_PATH
+                                                     )
+        self.preprocessing_object_file_path=os.path.join(self.data_transformation_object_dir,
+                                                         training_pipeline.PREPROCESSING_OBJECT_FILE_NAME
+                                                         )
         
         
