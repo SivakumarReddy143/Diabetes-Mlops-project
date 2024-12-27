@@ -57,7 +57,7 @@ class DataTransformation:
             transformed_test_input_feature=preprocess_object.transform(test_input_feature)
             
             train_arr=np.c_[transformed_train_input_features,np.array(train_target_column)]
-            test_arr=np.c_[transformed_test_input_feature,np.array(test_input_feature)]
+            test_arr=np.c_[transformed_test_input_feature,np.array(test_target_column)]
             
             save_numpy_array_data(self.data_transformation_config.train_numpy_array_file_path,train_arr)
             save_numpy_array_data(self.data_transformation_config.test_numpy_array_file_path,test_arr)
@@ -65,9 +65,9 @@ class DataTransformation:
             
             save_object('final_model/preprocessing.pkl',preprocess_object)
             data_transformation_artifacts=DataTransformationArtifact(
-                transformed_object_file_path=self.data_transformation_config.train_numpy_array_file_path,
+                transformed_object_file_path=self.data_transformation_config.preprocessing_object_file_path,
                 transformed_test_file_path=self.data_transformation_config.test_numpy_array_file_path,
-                transformed_train_file_path=self.data_transformation_config.preprocessing_object_file_path
+                transformed_train_file_path=self.data_transformation_config.train_numpy_array_file_path
             )
             
             return data_transformation_artifacts

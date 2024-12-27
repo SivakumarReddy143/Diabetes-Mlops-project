@@ -1,10 +1,15 @@
 from diabetes.exception.exception import DiabetesException
 from diabetes.logging.logger import logging
-from diabetes.entity.config_entity import DataIngestionConfig,TrainingPipelineConfig,DataValidationConfig,DataTransformationConfig
-from diabetes.entity.artifact_entity import DataIngestionArtifact
+from diabetes.entity.config_entity import (DataIngestionConfig,
+                                           TrainingPipelineConfig,
+                                           DataValidationConfig,
+                                           DataTransformationConfig,
+                                           ModelTrainerConfig
+                                           )
 from diabetes.components.data_ingestion import DataIngestion
 from diabetes.components.data_validation import DataValidation
 from diabetes.components.data_transformation import DataTransformation
+from diabetes.components.model_trainer import ModelTrainer
 import os
 import sys
 import pandas as pd
@@ -22,6 +27,8 @@ if __name__=="__main__":
         data_transformation_config=DataTransformationConfig(training_pipeline_config=training_pipeline_config)
         data_transformation=DataTransformation(data_transformation_config=data_transformation_config,data_validation_artifact=data_validation_artifacts)
         data_transformation_artifacts=data_transformation.initiate_data_transformation()
-        print(data_transformation_artifacts)
+        model_trainer_config=ModelTrainerConfig(training_pipeline_config=training_pipeline_config)
+        model_trainer=ModelTrainer(data_transformation_artifact=data_transformation_artifacts,model_trainer_config=model_trainer_config)
+        model_trainer.initiate_model_trainer()
     except Exception as e:
         raise DiabetesException(e,sys)
