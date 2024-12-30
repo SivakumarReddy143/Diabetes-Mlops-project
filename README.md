@@ -1,4 +1,4 @@
-```markdown
+
 # 🚀 **MLOps Pipeline for Diabetes Prediction**
 
 ![MLOps Pipeline](https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif)
