@@ -8,13 +8,22 @@ from diabetes.entity.config_entity import ModelTrainerConfig
 from diabetes.entity.artifact_entity import DataTransformationArtifact,ModelTrainerArtifact
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import AdaBoostClassifier,GradientBoostingClassifier,RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from diabetes.utils.ml_utils.model.estimator import DiabetesModel
 from diabetes.utils.ml_utils.metric.classification_metric import get_classification_score
 
 from diabetes.utils.main_utils.utils import evaluate_models,save_numpy_array_data,save_object,load_object,load_numpy_array_data
+
+import mlflow
+import dagshub
+from urllib.parse import urlparse
+from mlflow.models.signature import infer_signature
+
+# dagshub.init(repo_owner='mshivakumarreddy78', repo_name='Diabetes-Mlops-project', mlflow=True)
+os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/mshivakumarreddy78/Diabetes-Mlops-project.mlflow"
+os.environ["MLFLOW_TRACKING_USERNAME"]='mshivakumarreddy78'
+os.environ["MLFLOW_TRACKING_PASSWORD"]='20e6c06a55dd1445e742e9f17844edbcff441e47'
 
 class ModelTrainer:
     def __init__(self,data_transformation_artifact:DataTransformationArtifact,model_trainer_config:ModelTrainerConfig):
@@ -23,12 +32,30 @@ class ModelTrainer:
             self.model_trainer_config=model_trainer_config
         except Exception as e:
             raise DiabetesException(e,sys)
+        
+    def track_mlflow(self,best_model,classification_metric):
+        try:
+            mlflow.set_tracking_uri("https://dagshub.com/mshivakumarreddy78/Diabetes-Mlops-project.mlflow")
+            tracking_url_type_store=urlparse(mlflow.get_tracking_uri()).scheme
+            with mlflow.start_run():
+                f1_score=classification_metric.f1_score
+                precision_score=classification_metric.precision_score
+                recall_score=classification_metric.recall_score
+                mlflow.log_metric('f1_score',f1_score)
+                mlflow.log_metric('precission_score',precision_score)
+                mlflow.log_metric('recall_score',recall_score)
+                mlflow.sklearn.log_model(best_model,'model')
+                # signature=infer_signature(X,best_model.predict(X))
+                if tracking_url_type_store!="file":
+                    mlflow.sklearn.log_model(best_model,'model',registered_model_name=best_model)
+                else:
+                    mlflow.sklearn.log_model(best_model,'model')
+                
+        except Exception as e:
+            DiabetesException(e,sys)
     
     def train_model(self,X_train,y_train,X_test,y_test):
         try:
-            print("_________________________________________")
-            print(self.data_transformation_artifact.transformed_object_file_path)
-            print("____________________________________________________________")
             models = {
                 "Random Forest": RandomForestClassifier(verbose=1),
                 "Decision Tree": DecisionTreeClassifier(),
@@ -70,8 +97,10 @@ class ModelTrainer:
             
             y_train_pred=best_model.predict(X_train)
             classification_train_metric=get_classification_score(y_train,y_train_pred)
+            self.track_mlflow(best_model=best_model,classification_metric=classification_train_metric)
             y_test_pred=best_model.predict(X_test)
             classification_test_metric=get_classification_score(y_test,y_test_pred)
+            self.track_mlflow(best_model=best_model,classification_metric=classification_test_metric)
             
             preprocessor=load_object(self.data_transformation_artifact.transformed_object_file_path)
             
