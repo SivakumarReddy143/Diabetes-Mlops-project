@@ -1,7 +1,7 @@
 
 # 🚀 **MLOps Pipeline for Diabetes Prediction**
 
-![MLOps Pipeline](https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif)
+![MLOps Pipeline](https://sl.bing.net/iSIjpEM1k0i)
 
 Welcome to the **Diabetes Prediction MLOps Pipeline**! This repository showcases the seamless integration of MLOps tools and techniques to build, train, deploy, and monitor a machine learning model for predicting diabetes. 🌟
 
