@@ -11,7 +11,8 @@ load_dotenv()
 import certifi
 certifi.where()
 
-MONGO_DB_URL=os.getenv('MONGO_DB_URL')
+# MONGO_DB_URL=os.getenv('MONGO_DB_URL')
+MONGO_DB_URL="mongodb+srv://sivakumarreddym22:Siva123@cluster0.5d1wc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 class DiabetesDataExtract:
     def __init__(self):

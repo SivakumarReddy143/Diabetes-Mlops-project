@@ -11,7 +11,9 @@ import pymongo
 from dotenv import load_dotenv
 load_dotenv()
 
-MONGO_DB_URL=os.getenv("MONGO_DB_URL")
+# MONGO_DB_URL=os.getenv("MONGO_DB_URL")
+
+MONGO_DB_URL="mongodb+srv://sivakumarreddym22:Siva123@cluster0.5d1wc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 class DataIngestion:
     def __init__(self,data_ingestion_config:DataIngestionConfig):
